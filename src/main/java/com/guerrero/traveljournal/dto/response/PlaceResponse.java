@@ -1,7 +1,6 @@
 package com.guerrero.traveljournal.dto.response;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 public record PlaceResponse(
         Long id,
@@ -11,8 +10,6 @@ public record PlaceResponse(
         LocalDate startDate,
         LocalDate endDate,
         String description,
-        String imageUrl,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
+        String imageUrl
 ) {
 }
