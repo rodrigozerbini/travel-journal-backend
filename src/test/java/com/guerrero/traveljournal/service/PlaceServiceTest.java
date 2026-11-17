@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -72,7 +73,7 @@ class PlaceServiceTest {
     }
 
     @Test
-    @DisplayName("Should return list of places when places exist")
+    @DisplayName("Should return list of places ordered by endDate then startDate descending")
     void getAllPlaces_ShouldReturnList_WhenPlacesExist() {
         Place place = new Place();
         place.setId(1L);
@@ -88,7 +89,9 @@ class PlaceServiceTest {
                 null
         );
 
-        when(placeRepository.findAll()).thenReturn(List.of(place));
+        Sort expectedSort = Sort.by(Sort.Order.desc("endDate"), Sort.Order.desc("startDate"));
+
+        when(placeRepository.findAll(expectedSort)).thenReturn(List.of(place));
         when(placeMapper.toResponse(place)).thenReturn(response);
 
         List<PlaceResponse> result = placeService.getAllPlaces();
@@ -96,7 +99,7 @@ class PlaceServiceTest {
         assertThat(result).hasSize(1);
         assertThat(result.getFirst().id()).isEqualTo(1L);
 
-        verify(placeRepository).findAll();
+        verify(placeRepository).findAll(expectedSort);
         verify(placeMapper).toResponse(place);
     }
 }

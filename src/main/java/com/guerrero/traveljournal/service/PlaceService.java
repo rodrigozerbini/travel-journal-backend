@@ -7,6 +7,7 @@ import com.guerrero.traveljournal.mapper.PlaceMapper;
 import com.guerrero.traveljournal.repository.PlaceRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PlaceService {
 
+    private static final Sort LATEST_FIRST =
+            Sort.by(Sort.Order.desc("endDate"), Sort.Order.desc("startDate"));
+
     private final PlaceRepository placeRepository;
     private final PlaceMapper placeMapper;
 
@@ -33,7 +37,7 @@ public class PlaceService {
 
     @Transactional(readOnly = true)
     public List<PlaceResponse> getAllPlaces() {
-        return placeRepository.findAll()
+        return placeRepository.findAll(LATEST_FIRST)
                 .stream()
                 .map(placeMapper::toResponse)
                 .toList();
